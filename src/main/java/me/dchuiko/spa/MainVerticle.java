@@ -93,6 +93,12 @@ public class MainVerticle extends AbstractVerticle {
         });
 
         server.requestHandler(router::accept);
-        server.listen(config().getInteger("http.port", port));
+        server.listen(config().getInteger("http.port", port), result -> {
+            if (result.succeeded()) {
+                startFuture.complete();
+            } else {
+                startFuture.fail(result.cause());
+            }
+        });
     }
 }

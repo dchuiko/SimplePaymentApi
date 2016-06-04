@@ -2,7 +2,6 @@ package me.dchuiko.spa.rest;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -23,18 +22,20 @@ public class UserTest {
     @Before
     public void before(TestContext context) throws IOException {
         vertx = Vertx.vertx();
-        vertx.deployVerticle(MainVerticle.class.getName(), new DeploymentOptions().setConfig(new JsonObject().put("http.port", 8080)), context.asyncAssertSuccess());
+        final DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("http.port", 8081));
+        vertx.deployVerticle(MainVerticle.class.getName(), options, context.asyncAssertSuccess());
     }
 
     @Test
     public void testMyApplication(TestContext context) {
-//        final Async async = context.async();
-//        vertx.createHttpClient().getNow(8080, "localhost", "/api/users", response -> {
-//            response.handler(body -> {
-//                context.assertTrue(body.toString().contains("Hello"));
-//                async.complete();
-//            });
-//        });
+        final Async async = context.async();
+        vertx.createHttpClient().getNow(8081, "localhost", "/api/users", response -> {
+            context.assertEquals(200, response.statusCode());
+            response.handler(body -> {
+                context.assertTrue(body.toString().contains("Hello"));
+                async.complete();
+            });
+        });
     }
 
     @After
