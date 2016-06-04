@@ -1,4 +1,4 @@
-package me.dchuiko.spa.json.handler;
+package me.dchuiko.spa.rest.handler;
 
 import io.vertx.ext.web.RoutingContext;
 

@@ -5,10 +5,7 @@ import java.util.UUID;
 public interface IdGenerator {
     UUID id();
 
-    IdGenerator Default = new IdGenerator() {
-        @Override
-        public UUID id() {
-            return UUID.randomUUID();
-        }
-    };
+    static IdGenerator generator() {
+        return UUID::randomUUID;
+    }
 }

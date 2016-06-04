@@ -1,4 +1,4 @@
-package me.dchuiko.spa.json;
+package me.dchuiko.spa.rest.json;
 
 import java.math.BigDecimal;
 import java.time.Instant;

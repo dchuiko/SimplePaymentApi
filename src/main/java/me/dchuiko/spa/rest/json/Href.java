@@ -1,20 +1,28 @@
-package me.dchuiko.spa.json;
+package me.dchuiko.spa.rest.json;
 
-public class WebContext {
-    private static final String baseUrlTemplate = "%s://%s:%s";
-    private final String baseUrl;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+public class Href {
+    private final String href;
 
-
-    public WebContext(String protocol, String host, int port) {
-        this.baseUrl = String.format(baseUrlTemplate, protocol, host, port);
+    public Href(String... path) {
+        this(concat("", (Object[]) path));
     }
 
-    public String composeHref(String... params) {
-        return concat(baseUrl, (Object[]) params);
+    public Href(Href base, String... path) {
+        this(concat(base.getHref(), (Object[]) path));
     }
 
-    public static String concat(Object uri, Object... parts) {
+    public Href(String href) {
+        this.href = href;
+    }
+
+    @JsonValue
+    public String getHref() {
+        return href;
+    }
+
+    private static String concat(Object uri, Object... parts) {
         StringBuilder result = new StringBuilder(uri.toString());
         for (Object part : parts) {
             concatPart(result, part != null ? part.toString() : null);
@@ -31,7 +39,7 @@ public class WebContext {
         if (startsWithDelimiter) {
             part = part.substring(1);
         }
-        if (endsWithDelimiter) {
+        if (endsWithDelimiter || uri.length() == 0) {
             uri.append(part);
         } else {
             uri.append("/").append(part);
