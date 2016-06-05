@@ -1,5 +1,6 @@
 package me.dchuiko.spa.persistence;
 
+import me.dchuiko.spa.BaseTest;
 import me.dchuiko.spa.model.Account;
 import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.rest.JsonType;
@@ -21,13 +22,13 @@ import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class TransactionsTest {
-    private Accounts accounts = new Accounts(IdGenerator.generator());
-    private Users users = new Users(IdGenerator.generator());
+public class TransactionsTest extends BaseTest {
+    private Accounts accounts = DaoFactory.accounts;
+    private Users users = DaoFactory.users;
 
     private final int initialBalance = 1000;
 
-    private Transactions transactions = new Transactions(IdGenerator.generator());
+    private Transactions transactions = DaoFactory.transactions;
     private Ref senderRef;
     private Ref senderAccountRef;
     private Ref receiverRef;

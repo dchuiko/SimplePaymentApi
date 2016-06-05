@@ -1,5 +1,6 @@
 package me.dchuiko.spa.model;
 
+import me.dchuiko.spa.BaseTest;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class AccountWithBalanceTest {
+public class AccountWithBalanceTest extends BaseTest {
     private UUID senderId = UUID.randomUUID();
     private UUID receiverId = UUID.randomUUID();
 

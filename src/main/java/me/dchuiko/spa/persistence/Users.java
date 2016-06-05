@@ -11,11 +11,11 @@ public class Users extends Dao<User> {
     private static final EntityTable<User> users = new EntityTable<>();
 
     public Users(IdGenerator idGenerator) {
-        super(idGenerator);
+        super(idGenerator, users);
     }
 
     public User id(UUID id) {
-        return id(users, User.class, id);
+        return id(User.class, id);
     }
 
     public User update(UUID id, UserJson userJson) {
@@ -28,7 +28,7 @@ public class Users extends Dao<User> {
     }
 
     public List<User> list() {
-        return list(users);
+        return doList();
     }
 
     public User create(UserJson userJson) {

@@ -9,6 +9,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import me.dchuiko.spa.persistence.Accounts;
+import me.dchuiko.spa.persistence.DaoFactory;
 import me.dchuiko.spa.persistence.IdGenerator;
 import me.dchuiko.spa.persistence.Transactions;
 import me.dchuiko.spa.persistence.Users;
@@ -44,9 +45,9 @@ public class MainVerticle extends AbstractVerticle {
 
         router.route(new UriParts("/", WebContext.context, "*").get()).failureHandler(new FailureHandler());
 
-        Users users = new Users(idGenerator);
-        Accounts accounts = new Accounts(idGenerator);
-        Transactions transactions = new Transactions(idGenerator);
+        Users users = DaoFactory.users;
+        Accounts accounts = DaoFactory.accounts;
+        Transactions transactions = DaoFactory.transactions;
 
         UserHandler userHandler = new UserHandler(users, accounts, transactions);
         router.route(uri(User)).handler(BodyHandler.create());

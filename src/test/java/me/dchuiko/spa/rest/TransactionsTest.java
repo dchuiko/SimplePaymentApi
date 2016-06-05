@@ -9,6 +9,7 @@ import me.dchuiko.spa.model.AccountWithBalance;
 import me.dchuiko.spa.model.Transaction;
 import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.persistence.Accounts;
+import me.dchuiko.spa.persistence.DaoFactory;
 import me.dchuiko.spa.persistence.IdGenerator;
 import me.dchuiko.spa.persistence.Transactions;
 import me.dchuiko.spa.persistence.Users;
@@ -27,9 +28,9 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(VertxUnitRunner.class)
 public class TransactionsTest extends BaseRestTest {
-    private Users users = new Users(IdGenerator.generator());
-    private Accounts accounts = new Accounts(IdGenerator.generator());
-    private Transactions transactions = new Transactions(IdGenerator.generator());
+    private Users users = DaoFactory.users;
+    private Accounts accounts = DaoFactory.accounts;
+    private Transactions transactions = DaoFactory.transactions;
 
     @Test
     public void shouldCreateTransactions(TestContext context) {
@@ -80,8 +81,8 @@ public class TransactionsTest extends BaseRestTest {
             context.assertEquals(Status.created, response.statusCode());
 
             assertBody(response, s -> {
-                TransactionJson createdT1 = Json.decodeValue(s, TransactionJson.class);
-                context.assertEquals(100, createdT1.getAmount());
+                TransactionJson t1Json = Json.decodeValue(s, TransactionJson.class);
+                context.assertEquals(100, t1Json.getAmount());
                 t1Async.complete();
             });
         });

@@ -18,35 +18,25 @@ public class Accounts extends Dao<Account> {
     private final Users users;
 
     public Accounts(IdGenerator idGenerator) {
-        super(idGenerator);
-        this.users = new Users(idGenerator);
+        super(idGenerator, accounts);
+        this.users = DaoFactory.users;
     }
 
     public AccountWithBalance id(UUID id) {
-        Account account = id(accounts, Account.class, id);
+        Account account = id(Account.class, id);
         return new AccountWithBalance(account, joinTransactions(account.id()));
     }
 
-    public void lock(UUID id) {
-        lock(accounts, Account.class, id);
-    }
-
-    public void unlock(UUID id) {
-        unlock(accounts, Account.class, id);
-    }
-
     public List<AccountWithBalance> list() {
-        return list(accounts).stream().map(a -> new AccountWithBalance(a, joinTransactions(a.id()))).collect(Collectors.toList());
+        return doList().stream().map(a -> new AccountWithBalance(a, joinTransactions(a.id()))).collect(Collectors.toList());
     }
 
     public List<AccountWithBalance> list(Predicate<? super Account> selector) {
-        return list(accounts, selector).stream().map(a -> new AccountWithBalance(a, joinTransactions(a.id()))).collect(Collectors.toList());
+        return doList(selector).stream().map(a -> new AccountWithBalance(a, joinTransactions(a.id()))).collect(Collectors.toList());
     }
 
     public List<AccountWithBalance> userAccounts(UUID userId) {
-        return list(a -> {
-            return userId.equals(a.userId());
-        });
+        return list(a -> userId.equals(a.userId()));
     }
 
     private List<Transaction> joinTransactions(UUID accountId) {

@@ -70,4 +70,9 @@ public class EntityTable<T extends Identifiable & Copiable<T>> {
     public boolean isLocked(UUID key) {
         return locks.contains(key);
     }
+
+    public void clear() {
+        data.clear();
+        locks.clear();
+    }
 }

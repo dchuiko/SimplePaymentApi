@@ -2,10 +2,10 @@ package me.dchuiko.spa.persistence;
 
 import me.dchuiko.spa.model.AccountWithBalance;
 import me.dchuiko.spa.model.Transaction;
-import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.rest.exception.ValidationException;
 import me.dchuiko.spa.rest.json.TransactionJson;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,21 +19,21 @@ public class Transactions extends Dao<Transaction> {
     private final Users users;
 
     public Transactions(IdGenerator idGenerator) {
-        super(idGenerator);
-        this.accounts = new Accounts(idGenerator);
-        this.users = new Users(idGenerator);
+        super(idGenerator, transactions);
+        this.accounts = DaoFactory.accounts;
+        this.users = DaoFactory.users;
     }
 
     public Transaction id(UUID id) {
-        return id(transactions, Transaction.class, id);
+        return id(Transaction.class, id);
     }
 
     public List<Transaction> list() {
-        return list(transactions);
+        return doList();
     }
 
     public List<Transaction> list(Predicate<? super Transaction> selector) {
-        return list(transactions, selector);
+        return doList(selector);
     }
 
     public List<Transaction> userTransactions(UUID userId) {
@@ -61,8 +61,11 @@ public class Transactions extends Dao<Transaction> {
                 throw new ValidationException("Insufficient funds on account '" + senderAccount.number() + "'");
             }
 
-            Transaction transaction = new Transaction(id, transactionJson.getMoment(), senderAccount.userId(), senderAccount.id(),
-                                                      receiverAccount.userId(), receiverAccount.id(), transactionJson.getAmount());
+            final LocalDateTime moment = transactionJson.getMoment();
+            Transaction transaction = new Transaction(id, moment != null ? moment : LocalDateTime.now(),
+                                                      senderAccount.userId(), senderAccount.id(),
+                                                      receiverAccount.userId(), receiverAccount.id(),
+                                                      transactionJson.getAmount());
             transactions.put(id, transaction);
             return transaction;
 

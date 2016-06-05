@@ -1,5 +1,6 @@
 package me.dchuiko.spa.persistence;
 
+import me.dchuiko.spa.BaseTest;
 import me.dchuiko.spa.model.User;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
-public class EntityTableTest {
+public class EntityTableTest extends BaseTest {
     @Test
     public void shouldConcurrentlyPut() throws InterruptedException {
         EntityTable<User> table = new EntityTable<>();

@@ -12,32 +12,38 @@ import static me.dchuiko.spa.rest.http.Status.preconditionFailed;
 
 public abstract class Dao<T extends Identifiable & Copiable<T>> {
     private final IdGenerator idGenerator;
+    private final EntityTable<T> entityTable;
 
-    protected Dao(IdGenerator idGenerator) {
+    protected Dao(IdGenerator idGenerator, EntityTable<T> entityTable) {
         this.idGenerator = idGenerator;
+        this.entityTable = entityTable;
     }
 
     protected IdGenerator idGenerator() {
         return idGenerator;
     }
 
-    protected T id(EntityTable<T> entities, Class<T> clazz, UUID id) {
-        return entities.find(id).orElseThrow(() -> new ApplicationException(clazz.getSimpleName() + " id='" + id + "' not found", preconditionFailed));
+    protected T id(Class<T> clazz, UUID id) {
+        return entityTable.find(id).orElseThrow(() -> new ApplicationException(clazz.getSimpleName() + " id='" + id + "' not found", preconditionFailed));
     }
 
-    protected List<T> list(EntityTable<T> entities) {
-        return list(entities, t -> true);
+    protected List<T> doList() {
+        return doList(t -> true);
     }
 
-    protected List<T> list(EntityTable<T> entities, Predicate<? super T> selector) {
-        return entities.find(selector);
+    protected List<T> doList(Predicate<? super T> selector) {
+        return entityTable.find(selector);
     }
 
-    protected void lock(EntityTable<T> entities, Class<T> clazz, UUID id) {
-        entities.lock(id);
+    public void lock(UUID id) {
+        entityTable.lock(id);
     }
 
-    protected void unlock(EntityTable<T> entities, Class<T> clazz, UUID id) {
-        entities.unlock(id);
+    public void unlock(UUID id) {
+        entityTable.unlock(id);
+    }
+
+    public void clear() {
+        entityTable.clear();
     }
 }

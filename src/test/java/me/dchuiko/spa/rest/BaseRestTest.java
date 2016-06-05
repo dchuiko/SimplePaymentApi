@@ -8,6 +8,7 @@ import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
+import me.dchuiko.spa.BaseTest;
 import me.dchuiko.spa.MainVerticle;
 import me.dchuiko.spa.VertxInstance;
 import me.dchuiko.spa.rest.http.MimeType;
@@ -23,7 +24,7 @@ import java.util.function.Function;
 
 import static me.dchuiko.spa.rest.http.WebContext.uri;
 
-public abstract class BaseRestTest {
+public abstract class BaseRestTest extends BaseTest {
     protected Vertx vertx;
     protected HttpClient client;
     private int port = 8081;
