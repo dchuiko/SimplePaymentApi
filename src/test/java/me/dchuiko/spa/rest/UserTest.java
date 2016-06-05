@@ -1,46 +1,31 @@
 package me.dchuiko.spa.rest;
 
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import me.dchuiko.spa.MainVerticle;
-import org.junit.After;
-import org.junit.Before;
+import me.dchuiko.spa.rest.http.MimeType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
 @RunWith(VertxUnitRunner.class)
-public class UserTest {
+public class UserTest extends BaseRestTest {
 
-    Vertx vertx;
 
-    @Before
-    public void before(TestContext context) throws IOException {
-        vertx = Vertx.vertx();
-        final DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("http.port", 8081));
-        vertx.deployVerticle(MainVerticle.class.getName(), options, context.asyncAssertSuccess());
-    }
 
     @Test
     public void testMyApplication(TestContext context) {
         final Async async = context.async();
-        vertx.createHttpClient().getNow(8081, "localhost", "/api/users", response -> {
-            context.assertEquals(200, response.statusCode());
-            response.handler(body -> {
-                context.assertTrue(body.toString().contains("Hello"));
-                async.complete();
-            });
-        });
+        vertx.createHttpClient().get(8081, "localhost", "/api/users").putHeader("content-type", MimeType.application_json.toString())
+             .handler(response -> {
+                context.assertEquals(200, response.statusCode());
+                response.handler(body -> {
+                    context.assertTrue(body.toString().contains("Hello"));
+                    async.complete();
+                });
+
+        }).end();
     }
 
-    @After
-    public void after(TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
-    }
+
 
 }

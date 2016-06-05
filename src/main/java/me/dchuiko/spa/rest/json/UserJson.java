@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.rest.JsonType;
+import me.dchuiko.spa.rest.http.WebContext;
 
 @JsonPropertyOrder({"href", "type", "name" })
 public class UserJson extends HateosObject {
@@ -13,16 +14,16 @@ public class UserJson extends HateosObject {
     private final String name;
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Ref accounts;
+    private FieldRef accounts;
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Ref transactions;
+    private FieldRef transactions;
 
-    public UserJson(User user, String absoluteUri) {
-        super(JsonType.User, user, absoluteUri);
+    public UserJson(WebContext webContext, User user) {
+        super(webContext, JsonType.User, user.id());
         this.name = user.name();
-        this.accounts = new Ref(JsonType.Account, new Href(getHref(), "accounts"));
-        this.transactions = new Ref(JsonType.Transaction, new Href(getHref(), "transactions"));
+        this.accounts = new FieldRef(JsonType.Account, getHref(), "accounts");
+        this.transactions = new FieldRef(JsonType.Transaction, getHref(), "transactions");
     }
 
     @JsonCreator

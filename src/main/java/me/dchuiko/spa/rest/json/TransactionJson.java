@@ -1,21 +1,77 @@
 package me.dchuiko.spa.rest.json;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import me.dchuiko.spa.model.Transaction;
+import me.dchuiko.spa.rest.JsonType;
+import me.dchuiko.spa.rest.http.WebContext;
 
-public class TransactionJson {
-    private final UUID id;
-    private final Instant moment;
-    private final UUID senderId;
-    private final UUID receiverId;
-    private final BigDecimal amount;
+import java.time.LocalDateTime;
 
-    public TransactionJson(UUID id, Instant moment, UUID senderId, UUID receiverId, BigDecimal amount) {
-        this.id = id;
+@JsonPropertyOrder({"href", "type", "moment", "sender", "senderAccount", "receiver", "receiverAccount", "amount"})
+public class TransactionJson extends HateosObject {
+    @JsonProperty
+    private LocalDateTime moment;
+    @JsonProperty
+    private Ref sender;
+    @JsonProperty
+    private Ref senderAccount;
+    @JsonProperty
+    private Ref receiver;
+    @JsonProperty
+    private Ref receiverAccount;
+    @JsonProperty
+    private int amount;
+
+    public TransactionJson(WebContext context, Transaction transaction) {
+        super(context, JsonType.Transaction, transaction.id());
+        this.moment = transaction.moment();
+        this.sender = new Ref(context, JsonType.User, transaction.senderId());
+        this.senderAccount = new Ref(context, JsonType.Account, transaction.senderAccountId());
+        this.receiver = new Ref(context, JsonType.User, transaction.receiverId());
+        this.receiverAccount = new Ref(context, JsonType.Account, transaction.senderAccountId());
+        this.amount = transaction.amount();
+    }
+
+    @JsonCreator
+    public TransactionJson(@JsonProperty("href") String href,
+                           @JsonProperty("moment") LocalDateTime moment,
+                           @JsonProperty("sender") Ref sender,
+                           @JsonProperty("senderAccount") Ref senderAccount,
+                           @JsonProperty("receiver") Ref receiver,
+                           @JsonProperty("receiverAccount") Ref receiverAccount,
+                           @JsonProperty("amount") int amount) {
+        super(JsonType.Transaction, new Href(href));
         this.moment = moment;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+        this.sender = sender;
+        this.senderAccount = senderAccount;
+        this.receiver = receiver;
+        this.receiverAccount = receiverAccount;
         this.amount = amount;
+    }
+
+    public LocalDateTime getMoment() {
+        return moment;
+    }
+
+    public Ref getSender() {
+        return sender;
+    }
+
+    public Ref getSenderAccount() {
+        return senderAccount;
+    }
+
+    public Ref getReceiver() {
+        return receiver;
+    }
+
+    public Ref getReceiverAccount() {
+        return receiverAccount;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

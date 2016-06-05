@@ -7,8 +7,6 @@ import me.dchuiko.spa.rest.exception.ApplicationException;
 import static me.dchuiko.spa.rest.http.Status.methodNotAllowed;
 
 public abstract class GenericHandler implements Handler {
-
-
     public GenericHandler() {
     }
 

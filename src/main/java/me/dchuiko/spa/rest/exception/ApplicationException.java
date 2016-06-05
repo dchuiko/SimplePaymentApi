@@ -1,8 +1,10 @@
 package me.dchuiko.spa.rest.exception;
 
+import me.dchuiko.spa.rest.http.Status;
+
 public class ApplicationException extends RuntimeException {
     private String message;
-    private int status = 400;
+    private int status = Status.badRequest;
 
     public ApplicationException(Throwable cause) {
         super(cause);

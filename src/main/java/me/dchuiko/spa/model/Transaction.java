@@ -1,24 +1,23 @@
 package me.dchuiko.spa.model;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
 public class Transaction implements Identifiable, Copiable<Transaction> {
     private final UUID id;
-    private final Instant moment;
+    private final LocalDateTime moment;
     private final UUID senderId;
     private final UUID senderAccountId;
     private final UUID receiverId;
     private final UUID receiverAccountId;
-    private final BigDecimal amount;
+    private final int amount;
 
-    public Transaction(UUID id, Instant moment,
+    public Transaction(UUID id, LocalDateTime moment,
                        UUID senderId, UUID senderAccountId,
                        UUID receiverId, UUID receiverAccountId,
-                       BigDecimal amount) {
+                       int amount) {
         this.id = requireNonNull(id);
         this.moment = requireNonNull(moment);
         this.senderId = requireNonNull(senderId);
@@ -31,6 +30,30 @@ public class Transaction implements Identifiable, Copiable<Transaction> {
     @Override
     public UUID id() {
         return id;
+    }
+
+    public LocalDateTime moment() {
+        return moment;
+    }
+
+    public UUID senderId() {
+        return senderId;
+    }
+
+    public UUID senderAccountId() {
+        return senderAccountId;
+    }
+
+    public UUID receiverId() {
+        return receiverId;
+    }
+
+    public UUID receiverAccountId() {
+        return receiverAccountId;
+    }
+
+    public int amount() {
+        return amount;
     }
 
     @Override
