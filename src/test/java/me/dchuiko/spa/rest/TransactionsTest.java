@@ -32,35 +32,38 @@ public class TransactionsTest extends BaseRestTest {
 
     @Test
     public void shouldCreateTransactions(TestContext context) {
-        final Async userAsync = context.async();
+        final int initialBalance = 1000;
 
+        final Async userAsync1 = context.async();
         UserJson sender = new UserJson("", "sender");
         post(JsonType.User, Json.encode(sender), response -> {
             context.assertEquals(Status.created, response.statusCode());
-            userAsync.complete();
+            userAsync1.complete();
         });
+        userAsync1.awaitSuccess(1000);
 
+        final Async userAsync2 = context.async();
         UserJson receiver = new UserJson("", "receiver");
         post(JsonType.User, Json.encode(receiver), response -> {
             context.assertEquals(Status.created, response.statusCode());
-            userAsync.complete();
+            userAsync2.complete();
         });
+        userAsync2.awaitSuccess(1000);
 
-        userAsync.awaitSuccess(1000);
         final List<User> users = this.users.list();
         assertEquals(2, users.size());
 
 
         final Async accountAsync = context.async();
         final Ref senderRef = new Ref(JsonType.User.name(), users.get(0).id());
-        AccountJson senderAccount = new AccountJson("", "123", "Main", 1000, senderRef);
+        AccountJson senderAccount = new AccountJson("", "123", "Main", initialBalance, senderRef);
         post(JsonType.Account, Json.encode(senderAccount), response -> {
             context.assertEquals(Status.created, response.statusCode());
             accountAsync.complete();
         });
 
         final Ref receiverRef = new Ref(JsonType.User.name(), users.get(1).id());
-        AccountJson receiverAccount = new AccountJson("", "321", "Main", 1000, receiverRef);
+        AccountJson receiverAccount = new AccountJson("", "321", "Main", initialBalance, receiverRef);
         post(JsonType.Account, Json.encode(receiverAccount), response -> {
             context.assertEquals(Status.created, response.statusCode());
             accountAsync.complete();
@@ -88,5 +91,27 @@ public class TransactionsTest extends BaseRestTest {
 
         final List<Transaction> transactions = this.transactions.list();
         assertEquals(1, transactions.size());
+
+        final Async accountsAsync1 = context.async();
+        get(JsonType.Account, senderAccountRef.getId(), response -> {
+            context.assertEquals(Status.ok, response.statusCode());
+            assertBody(response, s -> {
+                AccountJson sa1 = Json.decodeValue(s, AccountJson.class);
+                context.assertEquals(initialBalance - 100, sa1.getBalance());
+                accountsAsync1.complete();
+            });
+        });
+        accountsAsync1.awaitSuccess(1000);
+
+        final Async accountsAsync2 = context.async();
+        get(JsonType.Account, receiverAccountRef.getId(), response -> {
+            context.assertEquals(Status.ok, response.statusCode());
+            assertBody(response, s -> {
+                AccountJson sa2 = Json.decodeValue(s, AccountJson.class);
+                context.assertEquals(initialBalance + 100, sa2.getBalance());
+                accountsAsync2.complete();
+            });
+        });
+        accountsAsync2.awaitSuccess(1000);
     }
 }

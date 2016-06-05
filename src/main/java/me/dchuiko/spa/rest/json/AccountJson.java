@@ -58,4 +58,8 @@ public class AccountJson extends HateosObject {
     public Ref getUser() {
         return user;
     }
+
+    public int getBalance() {
+        return balance;
+    }
 }

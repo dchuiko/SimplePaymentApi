@@ -51,7 +51,6 @@ public abstract class BaseRestTest extends BaseTest {
               .putHeader("content-type", MimeType.application_json.toString())
               .putHeader("content-length", "" + json.length())
               .handler(handler)
-              .setWriteQueueMaxSize(1000000000)
               .write(json)
               .end();
     }
