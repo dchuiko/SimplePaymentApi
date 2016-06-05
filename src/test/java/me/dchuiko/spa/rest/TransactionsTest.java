@@ -34,6 +34,7 @@ public class TransactionsTest extends BaseRestTest {
     public void shouldCreateTransactions(TestContext context) {
         final int initialBalance = 1000;
 
+        // create sender
         final Async userAsync1 = context.async();
         UserJson sender = new UserJson("", "sender");
         post(JsonType.User, Json.encode(sender), response -> {
@@ -42,6 +43,7 @@ public class TransactionsTest extends BaseRestTest {
         });
         userAsync1.awaitSuccess(1000);
 
+        // create receiver
         final Async userAsync2 = context.async();
         UserJson receiver = new UserJson("", "receiver");
         post(JsonType.User, Json.encode(receiver), response -> {
@@ -53,29 +55,33 @@ public class TransactionsTest extends BaseRestTest {
         final List<User> users = this.users.list();
         assertEquals(2, users.size());
 
-
-        final Async accountAsync = context.async();
+        // create sender account
+        final Async account1Async = context.async();
         final Ref senderRef = new Ref(JsonType.User.name(), users.get(0).id());
         AccountJson senderAccount = new AccountJson("", "123", "Main", initialBalance, senderRef);
         post(JsonType.Account, Json.encode(senderAccount), response -> {
             context.assertEquals(Status.created, response.statusCode());
-            accountAsync.complete();
+            account1Async.complete();
         });
+        account1Async.await(1000);
 
+        // create receiver account
+        final Async account2Async = context.async();
         final Ref receiverRef = new Ref(JsonType.User.name(), users.get(1).id());
         AccountJson receiverAccount = new AccountJson("", "321", "Main", initialBalance, receiverRef);
         post(JsonType.Account, Json.encode(receiverAccount), response -> {
             context.assertEquals(Status.created, response.statusCode());
-            accountAsync.complete();
+            account2Async.complete();
         });
+        account2Async.awaitSuccess(1000);
 
-        accountAsync.awaitSuccess(1000);
         final List<AccountWithBalance> accounts = this.accounts.list();
         assertEquals(2, accounts.size());
 
         final Ref senderAccountRef = new Ref(JsonType.Account.name(), accounts.get(0).id());
         final Ref receiverAccountRef = new Ref(JsonType.Account.name(), accounts.get(1).id());
 
+        // transfer 100 from sender to receiver
         final Async t1Async = context.async();
         TransactionJson t1 = new TransactionJson("", LocalDateTime.now(), senderAccountRef, receiverAccountRef, 100);
         post(JsonType.Transaction, Json.encode(t1), response -> {
@@ -92,26 +98,28 @@ public class TransactionsTest extends BaseRestTest {
         final List<Transaction> transactions = this.transactions.list();
         assertEquals(1, transactions.size());
 
-        final Async accountsAsync1 = context.async();
+        // assert sender account changed
+        final Async senderAccountAsync = context.async();
         get(JsonType.Account, senderAccountRef.getId(), response -> {
             context.assertEquals(Status.ok, response.statusCode());
             assertBody(response, s -> {
                 AccountJson sa1 = Json.decodeValue(s, AccountJson.class);
                 context.assertEquals(initialBalance - 100, sa1.getBalance());
-                accountsAsync1.complete();
+                senderAccountAsync.complete();
             });
         });
-        accountsAsync1.awaitSuccess(1000);
+        senderAccountAsync.awaitSuccess(1000);
 
-        final Async accountsAsync2 = context.async();
+        // assert receiver account changed
+        final Async receiverAccountAsync = context.async();
         get(JsonType.Account, receiverAccountRef.getId(), response -> {
             context.assertEquals(Status.ok, response.statusCode());
             assertBody(response, s -> {
                 AccountJson sa2 = Json.decodeValue(s, AccountJson.class);
                 context.assertEquals(initialBalance + 100, sa2.getBalance());
-                accountsAsync2.complete();
+                receiverAccountAsync.complete();
             });
         });
-        accountsAsync2.awaitSuccess(1000);
+        receiverAccountAsync.awaitSuccess(1000);
     }
 }
