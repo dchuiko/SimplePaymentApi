@@ -1,6 +1,5 @@
 package me.dchuiko.spa.rest.handler;
 
-import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 import me.dchuiko.spa.model.AccountWithBalance;
@@ -25,12 +24,9 @@ public class AccountHandler extends GenericHandler {
         super.readList(context);
         WebContext webContext = new WebContext(context.request());
 
-        context.vertx().executeBlocking(new io.vertx.core.Handler<Future<List<AccountJson>>>() {
-            @Override
-            public void handle(Future<List<AccountJson>> future) {
-                List<AccountJson> result = accounts.list().stream().map(account -> new AccountJson(webContext, account)).collect(Collectors.toList());
-                future.complete(result);
-            }
+        context.vertx().executeBlocking(future -> {
+            List<AccountJson> result = accounts.list().stream().map(account -> new AccountJson(webContext, account)).collect(Collectors.toList());
+            future.complete(result);
         }, false, new AsyncResultHandler<List<AccountJson>>(context) {
             @Override
             protected void doHandle(List<AccountJson> result) {
