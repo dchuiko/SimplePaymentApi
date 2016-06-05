@@ -107,6 +107,7 @@ public class TransactionsTest extends BaseTest {
         return new TransactionJson("", LocalDateTime.now(), receiverAccountRef, senderAccountRef, amount);
     }
 
+    // generates random transactions
     private class TestThread extends Thread {
         private final int iterationNumber;
         private final CountDownLatch latch;
