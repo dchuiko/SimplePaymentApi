@@ -1,7 +1,6 @@
 package me.dchuiko.spa.rest.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import me.dchuiko.spa.rest.JsonType;
 import me.dchuiko.spa.rest.http.WebContext;

@@ -13,7 +13,6 @@ import me.dchuiko.spa.persistence.DaoFactory;
 import me.dchuiko.spa.persistence.IdGenerator;
 import me.dchuiko.spa.persistence.Transactions;
 import me.dchuiko.spa.persistence.Users;
-import me.dchuiko.spa.rest.JsonType;
 import me.dchuiko.spa.rest.handler.AccountHandler;
 import me.dchuiko.spa.rest.handler.ContentTypeHandler;
 import me.dchuiko.spa.rest.handler.FailureHandler;
