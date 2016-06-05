@@ -1,11 +1,16 @@
 package me.dchuiko.spa.rest.http;
 
 import io.vertx.core.http.HttpServerRequest;
+import me.dchuiko.spa.rest.JsonType;
 
 public class WebContext {
     public static final String context = "api";
 
     private final HttpServerRequest request;
+
+    public static String uri(JsonType type) {
+        return new UriParts("/", context, type.namePlural()).get();
+    }
 
     public WebContext(HttpServerRequest request) {
         this.request = request;

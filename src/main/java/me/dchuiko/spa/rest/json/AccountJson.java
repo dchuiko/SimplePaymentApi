@@ -8,8 +8,6 @@ import me.dchuiko.spa.model.AccountWithBalance;
 import me.dchuiko.spa.rest.JsonType;
 import me.dchuiko.spa.rest.http.WebContext;
 
-import java.util.UUID;
-
 @JsonPropertyOrder({"href", "type", "number", "initialBalance", "balance", "alias", "user"})
 public class AccountJson extends HateosObject {
     @JsonProperty
@@ -57,7 +55,7 @@ public class AccountJson extends HateosObject {
         return initialBalance;
     }
 
-    public UUID getUserId() {
-        return user.getId();
+    public Ref getUser() {
+        return user;
     }
 }

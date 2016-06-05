@@ -2,7 +2,6 @@ package me.dchuiko.spa.persistence;
 
 import me.dchuiko.spa.model.Copiable;
 import me.dchuiko.spa.model.Identifiable;
-import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.rest.exception.ApplicationException;
 
 import java.util.List;

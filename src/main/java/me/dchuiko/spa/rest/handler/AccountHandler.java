@@ -1,18 +1,14 @@
 package me.dchuiko.spa.rest.handler;
 
-import io.vertx.core.*;
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
-import me.dchuiko.spa.model.Account;
 import me.dchuiko.spa.model.AccountWithBalance;
-import me.dchuiko.spa.model.User;
 import me.dchuiko.spa.persistence.Accounts;
 import me.dchuiko.spa.rest.JsonType;
-import me.dchuiko.spa.rest.http.ParsedUuid;
 import me.dchuiko.spa.rest.http.Status;
 import me.dchuiko.spa.rest.http.WebContext;
 import me.dchuiko.spa.rest.json.AccountJson;
-import me.dchuiko.spa.rest.json.UserJson;
 
 import java.util.List;
 import java.util.stream.Collectors;

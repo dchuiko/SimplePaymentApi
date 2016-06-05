@@ -9,6 +9,7 @@ import me.dchuiko.spa.rest.http.WebContext;
 import java.util.UUID;
 
 public class Ref extends HateosObject {
+    @JsonProperty
     private final UUID id;
 
     public Ref(WebContext webContext, JsonType type, UUID id) {
@@ -22,7 +23,6 @@ public class Ref extends HateosObject {
         this.id = id;
     }
 
-    @JsonIgnore
     public UUID getId() {
         return id;
     }

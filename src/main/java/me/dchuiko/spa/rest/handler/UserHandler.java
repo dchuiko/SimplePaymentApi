@@ -11,6 +11,7 @@ import me.dchuiko.spa.rest.http.ParsedUuid;
 import me.dchuiko.spa.rest.http.Status;
 import me.dchuiko.spa.rest.http.WebContext;
 import me.dchuiko.spa.rest.json.AccountJson;
+import me.dchuiko.spa.rest.json.TransactionJson;
 import me.dchuiko.spa.rest.json.UserJson;
 
 import java.util.List;
@@ -64,7 +65,19 @@ public class UserHandler extends GenericHandler {
     }
 
     public void readTransactions(RoutingContext context) {
+        WebContext webContext = new WebContext(context.request());
 
+        context.vertx().executeBlocking(future -> {
+            final UUID userId = new ParsedUuid(context.request(), "id").uuid();
+            List<TransactionJson> result =
+                    transactions.userTransactions(userId).stream().map(t -> new TransactionJson(webContext, t)).collect(Collectors.toList());
+            future.complete(result);
+        }, false, new AsyncResultHandler<List<TransactionJson>>(context) {
+            @Override
+            protected void doHandle(List<TransactionJson> result) {
+                context.response().setStatusCode(Status.ok).end(Json.encode(result));
+            }
+        });
     }
 
     public void readAccounts(RoutingContext context) {

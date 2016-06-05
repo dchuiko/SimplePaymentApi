@@ -24,6 +24,7 @@ import me.dchuiko.spa.rest.http.WebContext;
 import static me.dchuiko.spa.rest.JsonType.Account;
 import static me.dchuiko.spa.rest.JsonType.Transaction;
 import static me.dchuiko.spa.rest.JsonType.User;
+import static me.dchuiko.spa.rest.http.WebContext.uri;
 
 public class MainVerticle extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(MainVerticle.class);
@@ -82,9 +83,4 @@ public class MainVerticle extends AbstractVerticle {
             }
         });
     }
-
-    private String uri(JsonType type) {
-        return new UriParts("/", WebContext.context, type.namePlural()).get();
-    }
-
 }

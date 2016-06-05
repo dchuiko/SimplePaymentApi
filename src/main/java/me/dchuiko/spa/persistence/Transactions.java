@@ -3,7 +3,6 @@ package me.dchuiko.spa.persistence;
 import me.dchuiko.spa.model.AccountWithBalance;
 import me.dchuiko.spa.model.Transaction;
 import me.dchuiko.spa.model.User;
-import me.dchuiko.spa.rest.exception.ApplicationException;
 import me.dchuiko.spa.rest.exception.ValidationException;
 import me.dchuiko.spa.rest.json.TransactionJson;
 
@@ -37,6 +36,10 @@ public class Transactions extends Dao<Transaction> {
         return list(transactions, selector);
     }
 
+    public List<Transaction> userTransactions(UUID userId) {
+        return list(a -> userId.equals(a.receiverId()) || userId.equals(a.senderAccountId()));
+    }
+
     public Transaction create(TransactionJson transactionJson) {
         if (transactionJson.getAmount() <= 0) {
             throw new ValidationException("Transaction amount should be more then zero");
@@ -44,9 +47,7 @@ public class Transactions extends Dao<Transaction> {
 
         UUID id = idGenerator().id();
 
-        User sender = users.id(transactionJson.getSender().getId());
         AccountWithBalance senderAccount = accounts.id(transactionJson.getSenderAccount().getId());
-        User receiver = users.id(transactionJson.getReceiver().getId());
         AccountWithBalance receiverAccount = accounts.id(transactionJson.getReceiverAccount().getId());
 
         Set<UUID> takenLocks = new HashSet<>();
@@ -57,18 +58,17 @@ public class Transactions extends Dao<Transaction> {
             takenLocks.add(receiverAccount.id());
 
             if (senderAccount.balance() < transactionJson.getAmount()) {
-                throw new ApplicationException("Insufficient funds on account '" + senderAccount.number() + "'");
+                throw new ValidationException("Insufficient funds on account '" + senderAccount.number() + "'");
             }
 
-            Transaction transaction = new Transaction(id, transactionJson.getMoment(), sender.id(), senderAccount.id(),
-                                                      receiver.id(), receiverAccount.id(), transactionJson.getAmount());
+            Transaction transaction = new Transaction(id, transactionJson.getMoment(), senderAccount.userId(), senderAccount.id(),
+                                                      receiverAccount.userId(), receiverAccount.id(), transactionJson.getAmount());
             transactions.put(id, transaction);
             return transaction;
 
         } finally {
             takenLocks.forEach(accounts::unlock);
         }
-
 
     }
 

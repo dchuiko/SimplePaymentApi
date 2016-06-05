@@ -17,6 +17,7 @@
         <vertx.version>3.2.1</vertx.version>
         <uuid.generator.version>3.1.4</uuid.generator.version>
         <mockito.version>1.10.19</mockito.version>
+        <jackson.version>2.6.1</jackson.version>
     </properties>
 
     <build>
@@ -75,7 +76,11 @@
             <artifactId>java-uuid-generator</artifactId>
             <version>${uuid.generator.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
 
         <!-- test deps -->

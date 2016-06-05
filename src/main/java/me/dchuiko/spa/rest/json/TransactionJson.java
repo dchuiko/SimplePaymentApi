@@ -37,16 +37,12 @@ public class TransactionJson extends HateosObject {
     @JsonCreator
     public TransactionJson(@JsonProperty("href") String href,
                            @JsonProperty("moment") LocalDateTime moment,
-                           @JsonProperty("sender") Ref sender,
                            @JsonProperty("senderAccount") Ref senderAccount,
-                           @JsonProperty("receiver") Ref receiver,
                            @JsonProperty("receiverAccount") Ref receiverAccount,
                            @JsonProperty("amount") int amount) {
         super(JsonType.Transaction, new Href(href));
         this.moment = moment;
-        this.sender = sender;
         this.senderAccount = senderAccount;
-        this.receiver = receiver;
         this.receiverAccount = receiverAccount;
         this.amount = amount;
     }
@@ -55,16 +51,8 @@ public class TransactionJson extends HateosObject {
         return moment;
     }
 
-    public Ref getSender() {
-        return sender;
-    }
-
     public Ref getSenderAccount() {
         return senderAccount;
-    }
-
-    public Ref getReceiver() {
-        return receiver;
     }
 
     public Ref getReceiverAccount() {

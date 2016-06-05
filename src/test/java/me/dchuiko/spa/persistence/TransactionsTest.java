@@ -99,11 +99,11 @@ public class TransactionsTest {
     }
 
     private TransactionJson send(int amount) {
-        return new TransactionJson("", LocalDateTime.now(), senderRef, senderAccountRef, receiverRef, receiverAccountRef, amount);
+        return new TransactionJson("", LocalDateTime.now(), senderAccountRef, receiverAccountRef, amount);
     }
 
     private TransactionJson receive(int amount) {
-        return new TransactionJson("", LocalDateTime.now(), receiverRef, receiverAccountRef, senderRef, senderAccountRef, amount);
+        return new TransactionJson("", LocalDateTime.now(), receiverAccountRef, senderAccountRef, amount);
     }
 
     private class TestThread extends Thread {

@@ -57,7 +57,7 @@ public class Accounts extends Dao<Account> {
     public AccountWithBalance create(AccountJson accountJson) {
         UUID id = idGenerator().id();
 
-        User user = users.id(accountJson.getUserId());
+        User user = users.id(accountJson.getUser().getId());
 
         Account account = new Account(id, user.id(), accountJson.getNumber(), accountJson.getInitialBalance(), accountJson.getAlias());
         accounts.put(id, account);
