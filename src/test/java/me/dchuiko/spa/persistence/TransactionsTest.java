@@ -29,16 +29,14 @@ public class TransactionsTest extends BaseTest {
     private final int initialBalance = 1000;
 
     private Transactions transactions = DaoFactory.transactions;
-    private Ref senderRef;
     private Ref senderAccountRef;
-    private Ref receiverRef;
     private Ref receiverAccountRef;
 
     @Before
     public void before() {
         User sender = users.create(new UserJson("", "sender"));
         UUID senderId = sender.id();
-        senderRef = new Ref(JsonType.User.name(), senderId);
+        Ref senderRef = new Ref(JsonType.User.name(), senderId);
 
         Account senderAccount = accounts.create(new AccountJson("", "123", "", initialBalance, senderRef));
         UUID senderAccountId = senderAccount.id();
@@ -46,7 +44,7 @@ public class TransactionsTest extends BaseTest {
 
         User receiver = users.create(new UserJson("", "receiver"));
         UUID receiverId = receiver.id();
-        receiverRef = new Ref(JsonType.User.name(), receiverId);
+        Ref receiverRef = new Ref(JsonType.User.name(), receiverId);
 
         Account receiverAccount = accounts.create(new AccountJson("", "321", "", initialBalance, receiverRef));
         UUID receiverAccountId = receiverAccount.id();
