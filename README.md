@@ -1,9 +1,9 @@
 Сборка с помощью Maven: 
 mvn package
 Запуск (из директории проекта):
-java -jar target/spa-1.0-SNAPSHOT-all.jar
+`java -jar target/spa-1.0-SNAPSHOT-all.jar`
 
-По умолчанию веб-приложение стартует на localhost:8080.
+По умолчанию веб-приложение стартует на `localhost:8080`.
 
 Краткое описание ресурсов:
 
